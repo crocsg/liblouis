@@ -455,7 +455,7 @@ analyzeTable(const char *table, int activeOnly) {
 	info.encoding = noEncoding;
 	info.status = 0;
 	info.lineNumber = 0;
-	if ((info.in = fopen(info.fileName, "rb"))) {
+	if ((info.in = LOU_FOPEN(info.fileName, "rb"))) {
 		FeatureWithLineNumber *region = NULL;
 		FeatureWithLineNumber *language = NULL;
 		while (_lou_getALine(&info)) {
@@ -580,7 +580,7 @@ analyzeTable(const char *table, int activeOnly) {
 			} else
 				break;
 		}
-		fclose(info.in);
+		LOU_FCLOSE(info.in);
 		if (!region && language) {
 			region = memcpy(malloc(sizeof(FeatureWithLineNumber)),
 					(&(FeatureWithLineNumber){
@@ -658,7 +658,7 @@ listDir(List *list, char *dirName) {
 	if ((dir = opendir(dirName))) {
 		while ((file = readdir(dir))) {
 			sprintf(fileName, "%s%c%s", dirName, DIR_SEP, file->d_name);
-			if (stat(fileName, &info) == 0 && !(info.st_mode & S_IFDIR)) {
+			if (LOU_STAT(fileName, &info) == 0 && !(info.st_mode & S_IFDIR)) {
 				list = list_conj(list, strdup(fileName), NULL, NULL, free);
 			}
 		}

@@ -47,6 +47,9 @@
 wchar_t wchar;
 #endif
 
+
+
+
 /* The following variables and functions make it possible to specify the
  * path on which all tables for liblouis and all files for liblouisutdml,
  * in their proper directories, will be found.
@@ -295,7 +298,7 @@ getAChar(FileInfo *file) {
 			file->status++;
 			return file->checkencoding[1];
 		}
-	while ((ch1 = fgetc(file->in)) != EOF) {
+	while ((ch1 = LOU_FGETC(file->in)) != EOF) {
 		if (file->status < 2) file->checkencoding[file->status] = ch1;
 		file->status++;
 		if (file->status == 2) {
@@ -322,13 +325,13 @@ getAChar(FileInfo *file) {
 			return ch1;
 			break;
 		case bigEndian:
-			ch2 = fgetc(file->in);
+			ch2 = LOU_FGETC(file->in);
 			if (ch2 == EOF) break;
 			character = (widechar)(ch1 << 8) | ch2;
 			return (int)character;
 			break;
 		case littleEndian:
-			ch2 = fgetc(file->in);
+			ch2 = LOU_FGETC(file->in);
 			if (ch2 == EOF) break;
 			character = (widechar)(ch2 << 8) | ch1;
 			return (int)character;
@@ -4350,7 +4353,7 @@ lou_readCharFromFile(const char *fileName, int *mode) {
 		file.encoding = noEncoding;
 		file.status = 0;
 		file.lineNumber = 0;
-		if (!(file.in = fopen(file.fileName, "r"))) {
+		if (!(file.in = LOU_FOPEN(file.fileName, "r"))) {
 			_lou_logMessage(LOU_LOG_ERROR, "Cannot open file '%s'", file.fileName);
 			*mode = 1;
 			return EOF;
@@ -4362,7 +4365,7 @@ lou_readCharFromFile(const char *fileName, int *mode) {
 	}
 	ch = getAChar(&file);
 	if (ch == EOF) {
-		fclose(file.in);
+		LOU_FCLOSE(file.in);
 		file.in = NULL;
 		*mode = 1;
 	}
@@ -4557,7 +4560,7 @@ resolveSubtable(const char *table, const char *base, const char *searchPath) {
 		tableFile[++k] = '\0';
 		if (strlen(tableFile) + strlen(table) >= MAX_TABLEFILE_SIZE) goto failure;
 		strcat(tableFile, table);
-		if (stat(tableFile, &info) == 0 && !(info.st_mode & S_IFDIR)) {
+		if (LOU_STAT(tableFile, &info) == 0 && !(info.st_mode & S_IFDIR)) {
 			_lou_logMessage(LOU_LOG_DEBUG, "found table %s", tableFile);
 			return tableFile;
 		}
@@ -4569,7 +4572,7 @@ resolveSubtable(const char *table, const char *base, const char *searchPath) {
 	//
 	if (strlen(table) >= MAX_TABLEFILE_SIZE) goto failure;
 	strcpy(tableFile, table);
-	if (stat(tableFile, &info) == 0 && !(info.st_mode & S_IFDIR)) {
+	if (LOU_STAT(tableFile, &info) == 0 && !(info.st_mode & S_IFDIR)) {
 		_lou_logMessage(LOU_LOG_DEBUG, "found table %s", tableFile);
 		return tableFile;
 	}
@@ -4593,7 +4596,7 @@ resolveSubtable(const char *table, const char *base, const char *searchPath) {
 				goto failure;
 			}
 			sprintf(tableFile, "%s%c%s", dir, DIR_SEP, table);
-			if (stat(tableFile, &info) == 0 && !(info.st_mode & S_IFDIR)) {
+			if (LOU_STAT(tableFile, &info) == 0 && !(info.st_mode & S_IFDIR)) {
 				_lou_logMessage(LOU_LOG_DEBUG, "found table %s", tableFile);
 				free(searchPath_copy);
 				return tableFile;
@@ -4606,7 +4609,7 @@ resolveSubtable(const char *table, const char *base, const char *searchPath) {
 			}
 			sprintf(tableFile, "%s%c%s%c%s%c%s", dir, DIR_SEP, "liblouis", DIR_SEP,
 					"tables", DIR_SEP, table);
-			if (stat(tableFile, &info) == 0 && !(info.st_mode & S_IFDIR)) {
+			if (LOU_STAT(tableFile, &info) == 0 && !(info.st_mode & S_IFDIR)) {
 				_lou_logMessage(LOU_LOG_DEBUG, "found table %s", tableFile);
 				free(searchPath_copy);
 				return tableFile;
@@ -4643,8 +4646,12 @@ _lou_getTablePath(void) {
 				cp += sprintf(cp, ",%s%s", path, "\\share\\liblouis\\tables");
 			free(path);
 		}
+#elif defined(EMSCRIPTEM_REACT_SUPPORT)
+	cp += sprintf(cp,"");
+
 #else
-		cp += sprintf(cp, ",%s", TABLESDIR);
+	cp += sprintf(cp, ",%s", TABLESDIR);
+	
 #endif
 	}
 	if (searchPath[0] != '\0')
@@ -4695,6 +4702,7 @@ _lou_defaultTableResolver(const char *tableList, const char *base) {
 			;
 		last = (*cp == '\0');
 		*cp = '\0';
+		_lou_logMessage(LOU_LOG_ERROR, "sgn Try resolve table '%s %s %s'", subTable, base, searchPath);
 		if (!(tableFiles[k++] = resolveSubtable(subTable, base, searchPath))) {
 			char *path;
 			_lou_logMessage(LOU_LOG_ERROR, "Cannot resolve table '%s'", subTable);
@@ -4781,7 +4789,7 @@ compileFile(const char *fileName, TranslationTableHeader **table,
 	file.encoding = noEncoding;
 	file.status = 0;
 	file.lineNumber = 0;
-	if ((file.in = fopen(file.fileName, "rb"))) {
+	if ((file.in = LOU_FOPEN(file.fileName, "rb"))) {
 		// the scope of a macro is the current file (after the macro definition)
 		const MacroList *inscopeMacros = NULL;
 		while (_lou_getALine(&file))
@@ -4789,7 +4797,7 @@ compileFile(const char *fileName, TranslationTableHeader **table,
 				if (!errorCount) compileError(&file, "Rule could not be compiled");
 				break;
 			}
-		fclose(file.in);
+		LOU_FCLOSE(file.in);
 		free_macro_list(inscopeMacros);
 	} else {
 		_lou_logMessage(LOU_LOG_ERROR, "Cannot open table '%s'", file.fileName);

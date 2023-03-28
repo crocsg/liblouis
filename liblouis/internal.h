@@ -53,6 +53,7 @@ extern "C" {
 #define strcasecmp _stricmp
 #endif
 
+
 #define NUMVAR 50
 #define EMPHMODECHARSSIZE 256
 #define NOEMPHCHARSSIZE 256
@@ -527,10 +528,41 @@ typedef struct {
 
 typedef enum { noEncoding, bigEndian, littleEndian, ascii8 } EncodingType;
 
+#ifdef EMSCRIPTEM_SUPPORT
+# include <sys/stat.h>
+
+typedef struct _EMFILE 
+{
+	uint8_t* 	pdata;
+	size_t 	offset;
+	size_t	size;
+} EMFILE;
+
+#define LOU_FHANDLE EMFILE
+#define LOU_FGETC emfgetc
+#define LOU_FOPEN emfopen
+#define LOU_FCLOSE emfclose
+#define LOU_STAT emstat
+#define EMFILE_HANDLE_NBR	64
+
+
+LOU_FHANDLE *emfopen(const char *filename, const char *mode);
+int emfgetc(LOU_FHANDLE *stream);
+int emfclose(LOU_FHANDLE *stream);
+int emstat(const char *path,  struct stat *buf);
+
+#else
+#define LOU_FHANDLE FILE
+#define LOU_FGETC fgetc
+#define LOU_FOPEN fopen
+#define LOU_FCLOSE fclose
+#define LOU_STAT stat
+#endif
+
 typedef struct {
 	const char *fileName;
 	const char *sourceFile;
-	FILE *in;
+	LOU_FHANDLE *in;
 	int lineNumber;
 	EncodingType encoding;
 	int status;

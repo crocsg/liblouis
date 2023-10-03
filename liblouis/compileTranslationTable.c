@@ -4646,7 +4646,7 @@ _lou_getTablePath(void) {
 				cp += sprintf(cp, ",%s%s", path, "\\share\\liblouis\\tables");
 			free(path);
 		}
-#elif defined(EMSCRIPTEM_REACT_SUPPORT)
+#elif defined(EMSCRIPTEM_SUPPORT)
 	cp += sprintf(cp,"");
 
 #else

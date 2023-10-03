@@ -530,6 +530,7 @@ typedef enum { noEncoding, bigEndian, littleEndian, ascii8 } EncodingType;
 
 #ifdef EMSCRIPTEM_SUPPORT
 # include <sys/stat.h>
+#pragma message ("EMSCRIPTEM_SUPPORT ENABLED")
 
 typedef struct _EMFILE 
 {

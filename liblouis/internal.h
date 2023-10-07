@@ -534,8 +534,6 @@ typedef enum { noEncoding, bigEndian, littleEndian, ascii8 } EncodingType;
 #include <emscripten/stack.h>
 #pragma message ("EMSCRIPTEM_SUPPORT ENABLED")
 
-make error
-
 typedef struct _EMFILE 
 {
 	uint8_t* 	pdata;

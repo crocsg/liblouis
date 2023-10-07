@@ -48,7 +48,7 @@ wchar_t wchar;
 #endif
 
 
-
+ 
 
 /* The following variables and functions make it possible to specify the
  * path on which all tables for liblouis and all files for liblouisutdml,

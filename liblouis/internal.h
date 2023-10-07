@@ -529,7 +529,9 @@ typedef struct {
 typedef enum { noEncoding, bigEndian, littleEndian, ascii8 } EncodingType;
 
 #ifdef EMSCRIPTEM_SUPPORT
-# include <sys/stat.h>
+#include <sys/stat.h>
+#include <emscripten.h>
+#include <emscripten/stack.h>
 #pragma message ("EMSCRIPTEM_SUPPORT ENABLED")
 
 make error

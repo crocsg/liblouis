@@ -4647,6 +4647,7 @@ _lou_getTablePath(void) {
 			free(path);
 		}
 #elif defined(EMSCRIPTEN_SUPPORT)
+#pragma message("EMSCRIPTEN_SUPPORT ENABLED")
 	cp += sprintf(cp,"");
 
 #else

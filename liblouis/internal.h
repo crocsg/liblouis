@@ -530,8 +530,6 @@ typedef enum { noEncoding, bigEndian, littleEndian, ascii8 } EncodingType;
 
 #ifdef EMSCRIPTEN_SUPPORT
 #include <sys/stat.h>
-#include <emscripten.h>
-#include <emscripten/stack.h>
 #pragma message ("EMSCRIPTEN_SUPPORT ENABLED")
 
 typedef struct _EMFILE 

@@ -60,6 +60,8 @@ extern "C" {
 #define LOU_FOPEN fopen
 #define LOU_FCLOSE fclose
 #define LOU_STAT stat
+#else
+#include "lou_file_override.h"
 #endif
 
 #define NUMVAR 50

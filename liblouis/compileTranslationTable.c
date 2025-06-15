@@ -296,7 +296,7 @@ getAChar(FileInfo *file) {
 			file->status++;
 			return file->checkencoding[1];
 		}
-	while ((ch1 = fgetc(file->in)) != EOF) {
+	while ((ch1 = LOU_FGETC(file->in)) != EOF) {
 		if (file->status < 2) file->checkencoding[file->status] = ch1;
 		file->status++;
 		if (file->status == 2) {
@@ -323,13 +323,13 @@ getAChar(FileInfo *file) {
 			return ch1;
 			break;
 		case bigEndian:
-			ch2 = fgetc(file->in);
+			ch2 = LOU_FGETC(file->in);
 			if (ch2 == EOF) break;
 			character = (widechar)(ch1 << 8) | ch2;
 			return (int)character;
 			break;
 		case littleEndian:
-			ch2 = fgetc(file->in);
+			ch2 = LOU_FGETC(file->in);
 			if (ch2 == EOF) break;
 			character = (widechar)(ch2 << 8) | ch1;
 			return (int)character;
@@ -4342,7 +4342,7 @@ lou_readCharFromFile(const char *fileName, int *mode) {
 		file.encoding = noEncoding;
 		file.status = 0;
 		file.lineNumber = 0;
-		if (!(file.in = fopen(file.fileName, "r"))) {
+		if (!(file.in = LOU_FOPEN(file.fileName, "r"))) {
 			_lou_logMessage(LOU_LOG_ERROR, "Cannot open file '%s'", file.fileName);
 			*mode = 1;
 			return EOF;
@@ -4354,7 +4354,7 @@ lou_readCharFromFile(const char *fileName, int *mode) {
 	}
 	ch = getAChar(&file);
 	if (ch == EOF) {
-		fclose(file.in);
+		LOU_FCLOSE(file.in);
 		file.in = NULL;
 		*mode = 1;
 	}
@@ -4875,7 +4875,7 @@ compileFile(const char *fileName, TranslationTableHeader **table,
 	file.encoding = noEncoding;
 	file.status = 0;
 	file.lineNumber = 0;
-	if ((file.in = fopen(file.fileName, "rb"))) {
+	if ((file.in = LOU_FOPEN(file.fileName, "rb"))) {
 		// the scope of a macro is the current file (after the macro definition)
 		const MacroList *inscopeMacros = NULL;
 		while (_lou_getALine(&file))
@@ -4883,7 +4883,7 @@ compileFile(const char *fileName, TranslationTableHeader **table,
 				if (!errorCount) compileError(&file, "Rule could not be compiled");
 				break;
 			}
-		fclose(file.in);
+		LOU_FCLOSE(file.in);
 		free_macro_list(inscopeMacros);
 	} else {
 		_lou_logMessage(LOU_LOG_ERROR, "Cannot open table '%s'", file.fileName);

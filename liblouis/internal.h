@@ -53,6 +53,15 @@ extern "C" {
 #define strcasecmp _stricmp
 #endif
 
+#ifndef LOU_STREAM_OVERRIDE
+// use standard stdio function
+#define LOU_FHANDLE FILE
+#define LOU_FGETC fgetc
+#define LOU_FOPEN fopen
+#define LOU_FCLOSE fclose
+#define LOU_STAT stat
+#endif
+
 #define NUMVAR 50
 #define EMPHMODECHARSSIZE 256
 #define NOEMPHCHARSSIZE 256
@@ -769,6 +778,8 @@ static inline int
 isASCII(widechar c) {
 	return (c >= 0X20) && (c < 0X7F);
 }
+
+
 
 #ifdef __cplusplus
 }

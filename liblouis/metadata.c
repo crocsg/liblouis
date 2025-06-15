@@ -691,7 +691,7 @@ analyzeTable(const char *table, int activeOnly) {
 	info.encoding = noEncoding;
 	info.status = 0;
 	info.lineNumber = 0;
-	if ((info.in = fopen(info.fileName, "rb"))) {
+	if ((info.in = LOU_FOPEN(info.fileName, "rb"))) {
 		FeatureWithLineNumber *region = NULL;
 		FeatureWithLineNumber *language = NULL;
 		int unicodeRange = 0;
@@ -854,7 +854,7 @@ analyzeTable(const char *table, int activeOnly) {
 			} else
 				break;
 		}
-		fclose(info.in);
+		LOU_FCLOSE(info.in);
 		// add defaults
 		if (!region && language) {
 			region = memcpy(malloc(sizeof(FeatureWithLineNumber)),

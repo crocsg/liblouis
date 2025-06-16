@@ -61,6 +61,7 @@ extern "C" {
 #define LOU_FCLOSE fclose
 #define LOU_STAT stat
 #else
+#pragma message ("stdio files override activated")
 #include "lou_file_override.h"
 #endif
 

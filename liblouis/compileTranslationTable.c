@@ -4640,7 +4640,7 @@ resolveSubtable(const char *table, const char *base, const char *searchPath) {
 		tableFile[++k] = '\0';
 		if (strlen(tableFile) + strlen(table) >= MAX_TABLEFILE_SIZE) goto failure;
 		strcat(tableFile, table);
-		if (stat(tableFile, &info) == 0 && !(info.st_mode & S_IFDIR)) {
+		if (LOU_STAT(tableFile, &info) == 0 && !(info.st_mode & S_IFDIR)) {
 			_lou_logMessage(LOU_LOG_DEBUG, "found table %s", tableFile);
 			return tableFile;
 		}
@@ -4652,7 +4652,7 @@ resolveSubtable(const char *table, const char *base, const char *searchPath) {
 	//
 	if (strlen(table) >= MAX_TABLEFILE_SIZE) goto failure;
 	strcpy(tableFile, table);
-	if (stat(tableFile, &info) == 0 && !(info.st_mode & S_IFDIR)) {
+	if (LOU_STAT(tableFile, &info) == 0 && !(info.st_mode & S_IFDIR)) {
 		_lou_logMessage(LOU_LOG_DEBUG, "found table %s", tableFile);
 		return tableFile;
 	}
@@ -4676,7 +4676,7 @@ resolveSubtable(const char *table, const char *base, const char *searchPath) {
 				goto failure;
 			}
 			sprintf(tableFile, "%s%c%s", dir, DIR_SEP, table);
-			if (stat(tableFile, &info) == 0 && !(info.st_mode & S_IFDIR)) {
+			if (LOU_STAT(tableFile, &info) == 0 && !(info.st_mode & S_IFDIR)) {
 				_lou_logMessage(LOU_LOG_DEBUG, "found table %s", tableFile);
 				free(searchPath_copy);
 				return tableFile;
@@ -4689,7 +4689,7 @@ resolveSubtable(const char *table, const char *base, const char *searchPath) {
 			}
 			sprintf(tableFile, "%s%c%s%c%s%c%s", dir, DIR_SEP, "liblouis", DIR_SEP,
 					"tables", DIR_SEP, table);
-			if (stat(tableFile, &info) == 0 && !(info.st_mode & S_IFDIR)) {
+			if (LOU_STAT(tableFile, &info) == 0 && !(info.st_mode & S_IFDIR)) {
 				_lou_logMessage(LOU_LOG_DEBUG, "found table %s", tableFile);
 				free(searchPath_copy);
 				return tableFile;

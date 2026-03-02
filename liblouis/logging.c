@@ -127,14 +127,14 @@ static char initialLogFileName[FILENAMESIZE] = "";
 void EXPORT_CALL
 lou_logFile(const char *fileName) {
 	if (logFile) {
-		LOU_FCLOSE(logFile);
+		fclose(logFile);
 		logFile = NULL;
 	}
 	if (fileName == NULL || fileName[0] == 0 || strlen(fileName) >= FILENAMESIZE) return;
 	if (initialLogFileName[0] == 0) strcpy(initialLogFileName, fileName);
-	logFile = LOU_FOPEN(fileName, "a");
+	logFile = fopen(fileName, "a");
 	if (logFile == NULL && initialLogFileName[0] != 0)
-		logFile = LOU_FOPEN(initialLogFileName, "a");
+		logFile = fopen(initialLogFileName, "a");
 	if (logFile == NULL) {
 		fprintf(stderr, "Cannot open log file %s\n", fileName);
 		logFile = stderr;
@@ -159,6 +159,6 @@ lou_logPrint(const char *format, ...) {
 /* Close the log file */
 void EXPORT_CALL
 lou_logEnd(void) {
-	if (logFile != NULL && logFile != stderr) LOU_FCLOSE(logFile);
+	if (logFile != NULL && logFile != stderr) fclose(logFile);
 	logFile = NULL;
 }

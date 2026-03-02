@@ -4738,7 +4738,9 @@ _lou_getTablePath(void) {
 			free(path);
 		}
 #else
-		cp += sprintf(cp, ",%s", TABLESDIR);
+		//cp += sprintf(cp, ",%s", TABLESDIR);
+		// TODO: SGN CHECK TABLEDIR in EMSCRIPTEN env
+		cp += sprintf (cp, ",<tables>");
 #endif
 	}
 	if (searchPath[0] != '\0')

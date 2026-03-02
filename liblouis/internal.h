@@ -546,7 +546,7 @@ typedef enum { noEncoding, bigEndian, littleEndian, ascii8 } EncodingType;
 typedef struct {
 	const char *fileName;
 	const char *sourceFile;
-	FILE *in;
+	LOU_FHANDLE *in;
 	int lineNumber;
 	EncodingType encoding;
 	int status;

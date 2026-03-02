@@ -37,5 +37,5 @@ setup(name="louis",
       download_url = "https://github.com/liblouis/liblouis",
       license="LGPLv2.1+",
       classifiers=classifiers,
-      version='@VERSION@',
+      version='3.34.0',
       packages=["louis"])

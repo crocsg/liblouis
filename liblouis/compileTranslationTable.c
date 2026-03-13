@@ -4769,7 +4769,7 @@ _lou_getTablePath(void) {
 			free(path);
 		}
 #else
-		//int written = snprintf(cp, remaining, ",%s", TABLESDIR);
+		int written = snprintf(cp, remaining, ",%s", TABLESDIR);
 		if (written < 0 || written >= remaining) {
 			_lou_logMessage(LOU_LOG_ERROR, "TABLESDIR too long");
 			return NULL;
@@ -4777,7 +4777,7 @@ _lou_getTablePath(void) {
 		cp += written;
 		remaining -= written;
 		// TODO: SGN CHECK TABLEDIR in EMSCRIPTEN env
-		cp += sprintf (cp, ",<tables>");
+		//cp += sprintf (cp, ",<tables>");
 #endif
 	}
 	if (searchPath[0] != '\0')

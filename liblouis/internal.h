@@ -53,16 +53,16 @@ extern "C" {
 #define strcasecmp _stricmp
 #endif
 
-#ifndef LOU_STREAM_OVERRIDE
+#ifdef LOU_STREAM_OVERRIDE
+#pragma message ("stdio files override activated")
+#include "lou_file_override.h"
+#else
 // use standard stdio function
 #define LOU_FHANDLE FILE
 #define LOU_FGETC fgetc
 #define LOU_FOPEN fopen
 #define LOU_FCLOSE fclose
 #define LOU_STAT stat
-#else
-#pragma message ("stdio files override activated")
-#include "lou_file_override.h"
 #endif
 
 #define NUMVAR 50

@@ -363,3 +363,6 @@ TAGS
 # stuff for local development
 local/
 local
+
+#Emscripten tmp file
+a.wasm

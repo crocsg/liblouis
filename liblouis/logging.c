@@ -189,7 +189,7 @@ _lou_logMessage(logLevels level, const char *format, ...) {
 
 #define FILENAMESIZE 256
 
-static LOU_FHANDLE *logFile = NULL;
+static FILE *logFile = NULL;
 static char initialLogFileName[FILENAMESIZE] = "";
 
 void EXPORT_CALL
